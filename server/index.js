@@ -1,9 +1,10 @@
 const app = require('./server');
+const authRoute = require('./routers/authRoute');
 
-app.use('/api/auth', (req, res)=>{
+app.use('/api/test', (req, res)=>{
     return res.status(200).json({
         message: "success"
     });
 });
 
-console.log(process.env.PORT);
+app.use('/api/auth', authRoute);
