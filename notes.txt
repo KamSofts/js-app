@@ -1,0 +1,19 @@
+pwd => /home/ram
+mkdir notes_app
+touch notes.txt
+cd notes_app/
+git init
+mkdir server client
+cd server/
+npm init -y
+npm install express dotenv mysql2 bcryptjs multer jsonwebtoken cookie-parser cors
+npm i nodemon -D
+
+ALTER server/package.json
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+
+touch index.js server.js
+
+
