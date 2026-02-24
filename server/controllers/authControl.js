@@ -4,8 +4,9 @@ const db = require('../db');
 const register = async (req, res) => {
     try {
         const { mail, pwd } = req.body;
-
         // console.log(mail, pwd);
+        const img = (req.file ? `${req.file.filename}` : null);
+        // console.log(img);        
         if (!mail || !pwd) {
             return res.status(400).json({
                 message: "Username and password required...!"
@@ -25,7 +26,6 @@ const register = async (req, res) => {
         const sql2 = "INSERT INTO users_tbl"
             + " (user_name, user_pwd, user_img) VALUES (?,?,?);"        
         const encode_pwd = await bcrypt.hash(pwd, 12);
-        img = null;
         const [pk] = await db.query(sql2, [mail, encode_pwd, img]);
 
         return res.status(201).json({

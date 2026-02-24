@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Postman Clone - Form-Data & Files</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        select, input, button { padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        input[type="text"] { flex-grow: 1; }
+        .btn-send { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-add { background: #28a745; color: white; border: none; cursor: pointer; margin-bottom: 15px; }
+        .btn-remove { background: #dc3545; color: white; border: none; cursor: pointer; padding: 5px 12px; }
+        .kv-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .kv-row input { flex: 1; }
+        .kv-row select { width: 80px; }
+        #response-area { background: #272822; color: #f8f8f2; padding: 20px; border-radius: 5px; white-space: pre-wrap; margin-top: 20px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Postman Clone (Form-Data)</h2>
+        
+        <div class="input-group">
+            <select id="method">
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="GET">GET</option>
+            </select>
+            <input type="text" id="url" placeholder="Enter API URL (e.g., http://localhost:5000/api/auth/register)" value="http://192.168.57.3:5000/api/auth/register">
+            <button class="btn-send" onclick="sendRequest()">Send Request</button>
+        </div>
+
+        <label>Body (multipart/form-data)</label>
+        <div id="kv-container">
+            <!-- Initial Row -->
+            <div class="kv-row">
+                <select onchange="toggleInputType(this)">
+                    <option value="text">Text</option>
+                    <option value="file">File</option>
+                </select>
+                <input type="text" class="key" placeholder="Key">
+                <input type="text" class="value" placeholder="Value">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            </div>
+        </div>
+        <button class="btn-add" onclick="addRow()">+ Add Parameter</button>
+
+        <label>Response</label>
+        <div id="response-area">Response will appear here...</div>
+    </div>
+
+    <script>
+        // Toggle between text input and file input based on dropdown
+        function toggleInputType(select) {
+            const row = select.parentElement;
+            const valInput = row.querySelector('.value');
+            valInput.type = select.value === 'file' ? 'file' : 'text';
+            valInput.value = ""; // Clear on switch
+        }
+
+        function addRow() {
+            const div = document.createElement('div');
+            div.className = 'kv-row';
+            div.innerHTML = `
+                <select onchange="toggleInputType(this)">
+                    <option value="text">Text</option>
+                    <option value="file">File</option>
+                </select>
+                <input type="text" class="key" placeholder="Key">
+                <input type="text" class="value" placeholder="Value">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            `;
+            document.getElementById('kv-container').appendChild(div);
+        }
+
+        function removeRow(btn) {
+            btn.parentElement.remove();
+        }
+
+        async function sendRequest() {
+            const url = document.getElementById('url').value;
+            const method = document.getElementById('method').value;
+            const resArea = document.getElementById('response-area');
+            
+            if (!url) return alert("Please enter a URL");
+
+            // 1. Create FormData object
+            const formData = new FormData();
+            
+            // 2. Populate FormData from dynamic rows
+            document.querySelectorAll('.kv-row').forEach(row => {
+                const key = row.querySelector('.key').value;
+                const valueInput = row.querySelector('.value');
+                
+                if (key) {
+                    if (valueInput.type === 'file' && valueInput.files.length > 0) {
+                        formData.append(key, valueInput.files[0]); // Pro-Tip: File Support
+                    } else if (valueInput.type === 'text') {
+                        formData.append(key, valueInput.value);
+                    }
+                }
+            });
+
+            // 3. DEBUG: Check FormData contents in Console
+            console.log("--- FormData Content ---");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ', pair[1]);
+            }
+
+            resArea.textContent = "Requesting...";
+
+            try {
+                const options = {
+                    method: method,
+                    // Note: Browser automatically sets multipart/form-data boundary
+                    body: (method !== 'GET') ? formData : null
+                };
+
+                const response = await fetch(url, options);
+                const data = await response.json();
+                resArea.textContent = `Status: ${response.status} ${response.statusText}\n\n` + JSON.stringify(data, null, 2);
+            } catch (err) {
+                resArea.textContent = "Error: " + err.message + "\nCheck browser console for details.";
+            }
+        }
+    </script>
+</body>
+</html>

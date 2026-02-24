@@ -44,3 +44,19 @@ CREATE TABLE users_tbl (
 
 testing command : 
 curl -X POST http://192.168.57.3:5000/api/auth/register --json '{"mail":"ram@gmail.com","pwd":"ram"}'
+
+COMMIT-04
+~~~~~~~~~
+touch server/middlewares/imageUpload.js
+add cors
+touch postman.html (file created in project root folder)
+use postman.html FOR POST REQUIEST 
+  form-data : mail=user, pwd=user, img=/your-image-path/user.jpg
+
+MariaDB [(none)]> SELECT * FROM ram_db.users_tbl;
++---------+-----------+--------------------------------------------------------------+-------------------+
+| user_id | user_name | user_pwd                                                     | user_img          |
++---------+-----------+--------------------------------------------------------------+-------------------+
+|       1 | user      | $2b$12$y/xhW7RtPhChF/tIBxy6wexBelcNMGg8DPz3DqdhuPBBxPs5Wer2a | 1771928473855.jpg |
++---------+-----------+--------------------------------------------------------------+-------------------+
+1 row in set (0.001 sec)
