@@ -9,14 +9,13 @@ dotenv.config({
 });
 const PORT = process.env.PORT || 3000;
 
-// start server
+// start server & properties
 const app = express();
+app.use(express.json());
 app.listen(PORT, (error) => {
     console.log(`Server is running...! Port is ${PORT}`);
 });
 
-// server properties
-app.use(express.json());
 
 // export module
 module.exports = app;

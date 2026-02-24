@@ -27,3 +27,20 @@ touch routers/authRoute.js controllers/authControl.js
 touch .gitignore (for ignore node_modules and secret.env)
 
 testing command : curl -X POST http://192.168.57.3:5000/api/auth/register
+
+COMMIT-03
+~~~~~~~~~
+mariadb database server connectivity
+cd server/
+touch db.js
+
+USE ram_db;
+CREATE TABLE users_tbl (
+ user_id INT AUTO_INCREMENT PRIMARY KEY
+,user_name VARCHAR(45) NOT NULL UNIQUE
+,user_pwd VARCHAR(255) NOT NULL
+,user_img VARCHAR(255)
+);
+
+testing command : 
+curl -X POST http://192.168.57.3:5000/api/auth/register --json '{"mail":"ram@gmail.com","pwd":"ram"}'
