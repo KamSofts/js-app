@@ -6,7 +6,7 @@ const cors = require('cors');
 // set config AT FIRST COMMIT
 // path: path.join(__dirname.replace('server',''),'secret.env')
 dotenv.config({
-    path: path.join(__dirname,'secret.env') // for git example.env
+    path: path.join(__dirname.replace('src', ''), 'secret.env') // for git example.env
 });
 const PORT = process.env.PORT || 3000;
 const DEBUG_MODE = (process.env.DEBUG ? 'Developer' : 'Production');
@@ -16,10 +16,10 @@ const app = express();
 
 // Security: When you move to production, remember to change 
 // app.use(cors()) to app.use(cors({ origin: 'https://your-frontend-domain.com' })) to keep your API secure.
-if (DEBUG_MODE){
+if (DEBUG_MODE) {
     app.use(cors());
-}else{
-    app.use(cors({ origin: 'https://your-frontend-domain.com' }));
+} else {
+    app.use(cors({ origin: 'http://localhost:5173' }));
 }
 
 app.use(express.json());

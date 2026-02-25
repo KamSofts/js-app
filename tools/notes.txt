@@ -60,3 +60,23 @@ MariaDB [(none)]> SELECT * FROM ram_db.users_tbl;
 |       1 | user      | $2b$12$y/xhW7RtPhChF/tIBxy6wexBelcNMGg8DPz3DqdhuPBBxPs5Wer2a | 1771928473855.jpg |
 +---------+-----------+--------------------------------------------------------------+-------------------+
 1 row in set (0.001 sec)
+
+
+COMMIT-04
+~~~~~~~~~
+mv .gitignore server/
+
+mkdir tools
+mv notes.txt postman.html tools/
+
+cd server/
+mkdir scr
+
+MOVED TO src FOLDER :
+mv index.js server.js db.js src/
+mv controllers/ middlewares/ routers/ src/
+
+RENAME FOLDER uploads TO public :
+mv uploads/ public/ 
+
+
