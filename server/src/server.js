@@ -20,14 +20,7 @@ app.use(express.static(path.join(process.cwd(), "public")));
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// Security: When you move to production, remember to change 
-// app.use(cors()) to app.use(cors({ origin: 'https://your-frontend-domain.com' })) to keep your API secure.
-if (DEBUG_MODE) {
-    app.use(cors());
-} else {
-    app.use(cors({ origin: 'http://localhost:5173' }));
-}
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 app.listen(PORT, (error) => {
     console.log(`Server is running as ${DEBUG_MODE} mode...! Port is ${PORT}.`);

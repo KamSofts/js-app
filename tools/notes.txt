@@ -86,4 +86,21 @@ touch server/src/middlewares/checkToken.js
 USE TO TEST LOGIN API :
 touch tools/postman-json.html
 
+COMMIT-06
+~~~~~~~~~
+mkdir client
+cd client
+npm create vite@latest .
+  react > javascript > No > No
+npm install
+npm run dev (check is running after check Ctrl+C)
+npm install react-router-dom axios
+mv src/App.jsx src/xApp.jsx
+touch src/App.jsx
+mkdir src/compos
+cd src/compos
+touch AppMenu.jsx Login.jsx Register.jsx Auth.css
 
+GOTO client FOLDER BEFORE DO THIS
+mkdir src/utils
+touch src/utils/api.js  (api call global function for whole project)
