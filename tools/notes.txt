@@ -79,4 +79,11 @@ mv controllers/ middlewares/ routers/ src/
 RENAME FOLDER uploads TO public :
 mv uploads/ public/ 
 
+COMMIT-05
+~~~~~~~~~
+touch server/src/middlewares/checkToken.js
+
+USE TO TEST LOGIN API :
+touch tools/postman-json.html
+
 

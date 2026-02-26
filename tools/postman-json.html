@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Postman Clone - JSON Power</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        select, input, button { padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        input[type="text"] { flex-grow: 1; }
+        .btn-send { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-add { background: #28a745; color: white; border: none; cursor: pointer; margin-bottom: 15px; }
+        .btn-remove { background: #dc3545; color: white; border: none; cursor: pointer; padding: 5px 12px; }
+        .kv-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        #response-area { background: #272822; color: #a6e22e; padding: 20px; border-radius: 5px; white-space: pre-wrap; margin-top: 20px; font-family: 'Courier New', monospace; overflow-x: auto; min-height: 100px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Postman Clone (JSON Type)</h2>
+        
+        <div class="input-group">
+            <select id="method">
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="GET">GET</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+            <input type="text" id="url" placeholder="API URL" value="http://192.168.57.3:5000/api/auth/login">
+            <button class="btn-send" onclick="sendRequest()">Send Request</button>
+        </div>
+
+        <label>JSON Body (Key-Value Pairs)</label>
+        <div id="kv-container">
+            <div class="kv-row">
+                <input type="text" class="key" placeholder="Key (e.g., title)">
+                <input type="text" class="value" placeholder="Value (e.g., hello)">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            </div>
+        </div>
+        <button class="btn-add" onclick="addRow()">+ Add Field</button>
+
+        <label>Response</label>
+        <div id="response-area">Press "Send Request" to see results...</div>
+    </div>
+
+    <script>
+        function addRow() {
+            const div = document.createElement('div');
+            div.className = 'kv-row';
+            div.innerHTML = `
+                <input type="text" class="key" placeholder="Key">
+                <input type="text" class="value" placeholder="Value">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            `;
+            document.getElementById('kv-container').appendChild(div);
+        }
+
+        function removeRow(btn) {
+            btn.parentElement.remove();
+        }
+
+        async function sendRequest() {
+            const url = document.getElementById('url').value;
+            const method = document.getElementById('method').value;
+            const resArea = document.getElementById('response-area');
+            
+            if (!url) return alert("URL is missing!");
+
+            // 1. Build JSON Object from rows
+            const payload = {};
+            document.querySelectorAll('.kv-row').forEach(row => {
+                const key = row.querySelector('.key').value.trim();
+                const val = row.querySelector('.value').value;
+                if (key) payload[key] = val;
+            });
+
+            resArea.textContent = "Sending JSON request...";
+
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json' //
+                    }
+                };
+
+                // GET/HEAD cannot have a body
+                if (method !== 'GET' && method !== 'HEAD') {
+                    options.body = JSON.stringify(payload); //
+                }
+
+                const response = await fetch(url, options);
+                const data = await response.json(); //
+                
+                resArea.textContent = `Status: ${response.status} ${response.statusText}\n\n` + 
+                                     JSON.stringify(data, null, 2); //
+            } catch (err) {
+                resArea.style.color = "#f92672";
+                resArea.textContent = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
