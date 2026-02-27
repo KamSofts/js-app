@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, fetchUser } = require('../controllers/authControl');
+const { register, login, fetchUser, logout } = require('../controllers/authControl');
 const imgUpload = require('../middlewares/imageUpload');
 const checkToken = require('../middlewares/checkToken');
 
@@ -10,7 +10,7 @@ router.post("/register",
     register);
 
 router.post("/login", login);
-
-router.post("/access", checkToken, fetchUser);
+router.get("/logout", logout);
+router.get("/access", checkToken, fetchUser);
 
 module.exports = router;

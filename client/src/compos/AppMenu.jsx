@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useAccess } from "../utils/AccessContext";
 
 export default function AppMenu() {
+  const { user, logout } = useAccess();
+
   const navStyle = {
     display: "flex",
     justifyContent: "space-between",
@@ -20,19 +23,39 @@ export default function AppMenu() {
     transition: "color 0.2s ease"
   });
 
+  const logoutButtonStyle = {
+    background: 'none',     // Remove default button background
+    border: 'none',         // Remove default button border
+    padding: "0rem 1rem",   // Remove default padding
+    cursor: 'pointer',      // Make it show the "hand" icon on hover
+    font: 'inherit',        // Ensure it uses the same font as your links
+    display: 'inline-flex', // Align it properly with other links
+  };
+
   return (
     <nav style={navStyle}>
       {/* Brand / Primary Link */}
       <div>
-        <NavLink to="/" style={{ ...linkStyle({}), marginLeft: 0, fontSize: "2rem" , fontWeight: "700", color: "#000" }}>
+        <NavLink to="/" style={{ ...linkStyle({}), marginLeft: 0, fontSize: "2rem", fontWeight: "700", color: "#000" }}>
           KAM
         </NavLink>
       </div>
 
       {/* Auth / Action Links */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <NavLink to="/register" style={linkStyle}>Register</NavLink>
-        <NavLink to="/login" style={linkStyle}>Login</NavLink>
+
+        {user
+          ? <>
+            <NavLink to="/profile" style={linkStyle}>
+              {user?.user_data ? user.user_data.user_name : "Profile"}
+            </NavLink>
+            <button onClick={logout} style={logoutButtonStyle}>Logout</button>
+          </>
+          : <>
+            <NavLink to="/register" style={linkStyle}>Register</NavLink>
+            <NavLink to="/login" style={linkStyle}>Login</NavLink>
+          </>}
+
       </div>
     </nav>
   );

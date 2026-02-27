@@ -35,7 +35,7 @@ const register = async (req, res) => {
             user_id: pk.insertId
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -43,7 +43,7 @@ const login = async (req, res) => {
     try {
         const { mail, pwd } = req.body;
         if (!mail || !pwd) {
-            return res.status(400).json({
+            return res.status(200).json({
                 message: "Username and password required...!"
             });
         }
@@ -70,25 +70,30 @@ const login = async (req, res) => {
                 expires: new Date(validity)
             });
 
-            //testing
-            const tt = res.cookie.user_token;
-            console.log(tt);
-
             return res.status(200).json({ message: "Login success" });
         }
 
         // if conditions are false
-        res.status(400).json({ message: "Username not exists" });
+        res.status(200).json({ message: "Username not exists" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
+
+const logout = async (req, res) => {
+    try {
+        res.clearCookie("user_token");
+        res.status(200).json({ message: "Logout success" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 const fetchUser = async (req, res) => {
     try {
         const user_id = req.access.id;
         if (user_id) {
-            const sql = "SELECT * FROM users_tbl WHERE user_id=?;";
+            const sql = "SELECT user_id,user_name,user_img FROM users_tbl WHERE user_id=?;";
             const [rs] = await db.query(sql, [user_id]);
             if (rs.length > 0) {
                 return res.status(200).json({
@@ -101,8 +106,8 @@ const fetchUser = async (req, res) => {
         // if conditions are false
         return res.status(401).json({ warning: "Access denied" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
-module.exports = { register, login, fetchUser };
+module.exports = { register, login, fetchUser, logout };

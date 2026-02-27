@@ -10,7 +10,7 @@ const checkToken = (req, res, next) => {
         req.access = verifyToken;
         next();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 

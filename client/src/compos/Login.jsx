@@ -1,16 +1,32 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import './Auth.css';
+import { useAccess } from "../utils/AccessContext";
+// import { AccessContext } from "../utils/AccessContext";
 
 export default function Login() {
     const [mail, setMail] = useState("");
     const [pwd, setPassword] = useState("");
     const [exception, setException] = useState("");
+    // const { user, login, fetched } = useContext(AccessContext);
+    const { login, fetched } = useAccess();
+
+    const navigate = useNavigate();
 
     const loginClicked = async (evt) => {
         evt.preventDefault();
-        setException("Work in process...!");
-        return;
+        setException("");
+
+        const isOk = await login({ mail, pwd });
+        if (isOk) {
+            navigate("/mdi/dashboard");
+        } else {
+            setException("Login failed! Please check your email/password.");
+        }
+    }
+
+    if (!fetched) {
+        return <div>Please wait... Fetching user details...!</div>
     }
 
     return (

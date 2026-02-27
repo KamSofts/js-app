@@ -2,13 +2,12 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: 'http://192.168.57.3:5000/api',
-    withCredentials: true // <--- ADD THIS HERE
+    withCredentials: true
 });
 
 // The "Global Error Handler"
 api.interceptors.response.use(
-    (response) => response, // Pass through successful responses
-    (error) => {
+    (response) => response, (error) => {
         const status = error.response ? error.response.status : null;
 
         if (status === 401) {
@@ -19,8 +18,6 @@ api.interceptors.response.use(
         } else if (!error.response) {
             alert("Network error: Please check your internet connection.");
         }
-
-        // Return a rejected promise so the local component can still see the error
         return Promise.reject(error);
     }
 );

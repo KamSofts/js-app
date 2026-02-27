@@ -104,3 +104,11 @@ touch AppMenu.jsx Login.jsx Register.jsx Auth.css
 GOTO client FOLDER BEFORE DO THIS
 mkdir src/utils
 touch src/utils/api.js  (api call global function for whole project)
+
+COMMIT-07
+~~~~~~~~~
+touch client/src/utils/AccessContext.jsx
+touch client/src/utils/AllowContext.jsx
+mkdir client/src/compos/mid 
+touch client/src/compos/mid/Dashboard.jsx
+touch client/src/compos/mid/Profile.jsx
